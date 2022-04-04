@@ -18,9 +18,34 @@ function getRemoteAddress (connInfo: ConnInfo): Deno.NetAddr {
 }
 
 const handler: Handler = (request, connInfo) => {
+  const url = new URL(request.url);
+  if (url.pathname == '/favicon.ico') {
+    return new Response('');
+  }
   const {hostname, port} = getRemoteAddress(connInfo);
-  const message = `${hostname}\n`;
-  return new Response(message, {
+  //console.log(request.headers);
+  console.log(request);
+  //console.log("Path:", url.pathname);
+  //console.log("Query parameters:", url.searchParams);
+
+  const hd = [ 'user-agent', 'accept', 'accept-language', 'accept-encoding', 'connection'];
+
+  var body = '';
+  const left = 21;
+
+  if (url.pathname == '/i') {
+    body += "REMOTE_ADDR".padEnd(left) + `: ${hostname}\n`;
+    hd.forEach(el => {
+      body += el.padEnd(left) + `: ${request.headers.get(el)}\n`;
+    });
+    body += "REQUEST_METHOD".padEnd(left) + `: ${request.method}\n`;
+    body += "HTTP_HOST".padEnd(left) + `: ${url.host}\n`;
+    body += "SCRIPT_NAME".padEnd(left) + `: ${url.pathname}\n`;
+    body += "REQUEST_URI".padEnd(left) + `: ${url.pathname}${url.search}\n`;
+  } else {
+    body = `${hostname}\n`;
+  }
+  return new Response(body, {
     headers: { "content-type": "text/plain" },
   });
 };
