@@ -56,12 +56,15 @@ const handler: Handler = (request, connInfo) => {
   }
   const serverHost = getHost(url.host);
   const subdomain = serverHost.split('.')[0];
+  console.log(subdomain);
 
   const clientIp = getRemoteAddress(connInfo);
 
   let body = '';
 
-  if (url.pathname == '/i' || subdomain == 'i2' || subdomain == 'i') {
+  if (url.pathname == '/ip') {
+    body = `${clientIp}\n`;
+  } else if (url.pathname == '/i' || subdomain == 'i') {
     body = fullInfo(clientIp, request, url);
   } else {
     body = `${clientIp}\n`;
