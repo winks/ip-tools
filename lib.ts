@@ -1,21 +1,19 @@
-import {
-  type ConnInfo,
-} from "https://deno.land/std@0.142.0/http/server.ts";
+import { type ConnInfo } from "https://deno.land/std@0.142.0/http/server.ts";
 
 // https://stackoverflow.com/questions/71008150/get-remote-client-ip-address-in-deno
-export function assertIsNetAddr (addr: Deno.Addr): asserts addr is Deno.NetAddr {
-  if (!['tcp', 'udp'].includes(addr.transport)) {
-    throw new Error('Not a network address');
+export function assertIsNetAddr(addr: Deno.Addr): asserts addr is Deno.NetAddr {
+  if (!["tcp", "udp"].includes(addr.transport)) {
+    throw new Error("Not a network address");
   }
 }
 
-export function getRemoteAddress (connInfo: ConnInfo): string {
+export function getRemoteAddress(connInfo: ConnInfo): string {
   assertIsNetAddr(connInfo.remoteAddr);
   return connInfo.remoteAddr.hostname;
 }
 
-export function getHost (host: string) {
-  const parts = host.split(':')
+export function getHost(host: string) {
+  const parts = host.split(":");
   if (parts.length < 3) {
     return parts[0];
   } else {
@@ -23,22 +21,28 @@ export function getHost (host: string) {
   }
 }
 
-export function fullInfo (clientIp: string, request: Request, url: URL) {
+export function fullInfo(clientIp: string, request: Request, url: URL) {
   const body = [];
   const left = 21;
-  const headers = ['user-agent', 'accept', 'accept-language', 'accept-encoding', 'connection'];
+  const headers = [
+    "user-agent",
+    "accept",
+    "accept-language",
+    "accept-encoding",
+    "connection",
+  ];
 
-  body.push("remote-addr".padEnd(left)    + `: ${clientIp}`);
-  headers.forEach(el => {
-    body.push(el.padEnd(left)             + `: ${request.headers.get(el)}`);
+  body.push("remote-addr".padEnd(left) + `: ${clientIp}`);
+  headers.forEach((el) => {
+    body.push(el.padEnd(left) + `: ${request.headers.get(el)}`);
   });
   body.push("request-method".padEnd(left) + `: ${request.method}`);
-  body.push("http-host".padEnd(left)      + `: ${getHost(url.host)}`);
-  body.push("script-name".padEnd(left)    + `: ${url.pathname}`);
-  body.push("request-uri".padEnd(left)    + `: ${url.pathname}${url.search}`);
-  body.push("ssl".padEnd(left)            + `: ${url.protocol == 'https:'}`);
+  body.push("http-host".padEnd(left) + `: ${getHost(url.host)}`);
+  body.push("script-name".padEnd(left) + `: ${url.pathname}`);
+  body.push("request-uri".padEnd(left) + `: ${url.pathname}${url.search}`);
+  body.push("ssl".padEnd(left) + `: ${url.protocol == "https:"}`);
 
-  return body.join('\n');
+  return body.join("\n");
 }
 
 export function showAscii() {
@@ -109,16 +113,54 @@ export function bin(v: string | null) {
 
 export function ts(v: string | null) {
   const rv = parseInt(`${v}`);
-  return new Date(rv*1000).toISOString();
+  return new Date(rv * 1000).toISOString();
 }
 
 export function dt(v: string | null) {
   const rv = `${v}`;
-  return `${new Date(rv).getTime()/1000}`;
+  return `${new Date(rv).getTime() / 1000}`;
 }
 
 export function p3(v: string) {
-  const parts = v.split('/');
-  if (parts.length < 3) return '';
+  const parts = v.split("/");
+  if (parts.length < 3) return "";
   return parts[2];
 }
+
+export const EMPTY_GIF = new Uint8Array([
+  0x47,
+  0x49,
+  0x46,
+  0x38,
+  0x39,
+  0x61,
+  0x01,
+  0x00,
+  0x01,
+  0x00,
+  0x80,
+  0x00,
+  0x00,
+  0xff,
+  0xff,
+  0xff,
+  0x00,
+  0x00,
+  0x00,
+  0x2c,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x01,
+  0x00,
+  0x01,
+  0x00,
+  0x00,
+  0x02,
+  0x02,
+  0x44,
+  0x01,
+  0x00,
+  0x3b,
+]);

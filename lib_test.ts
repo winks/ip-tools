@@ -1,11 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.142.0/testing/asserts.ts";
 
-import {
-  assertIsNetAddr, getRemoteAddress, getHost, 
-  fullInfo, showAscii, showHelp,
-  hex, dec, bin, ts, dt, p3
-} from "./lib.ts";
-
+import { bin, dec, dt, getHost, hex, p3, ts } from "./lib.ts";
 
 Deno.test("test hex()", () => {
   const rv = hex("123456");
