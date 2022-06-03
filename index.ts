@@ -1,48 +1,14 @@
 import {
   serve,
-  type ConnInfo,
   type Handler,
   type ServeInit
-} from "https://deno.land/std@0.141.0/http/server.ts";
+} from "https://deno.land/std@0.142.0/http/server.ts";
 
-// https://stackoverflow.com/questions/71008150/get-remote-client-ip-address-in-deno
-function assertIsNetAddr (addr: Deno.Addr): asserts addr is Deno.NetAddr {
-  if (!['tcp', 'udp'].includes(addr.transport)) {
-    throw new Error('Not a network address');
-  }
-}
-
-function getRemoteAddress (connInfo: ConnInfo): string {
-  assertIsNetAddr(connInfo.remoteAddr);
-  return connInfo.remoteAddr.hostname;
-}
-
-function getHost (host: string) {
-  const parts = host.split(':')
-  if (parts.length < 3) {
-    return parts[0];
-  } else {
-    return host;
-  }
-}
-
-function fullInfo (clientIp: string, request: Request, url: URL) {
-  const body = [];
-  const left = 21;
-  const headers = ['user-agent', 'accept', 'accept-language', 'accept-encoding', 'connection'];
-
-  body.push("remote-addr".padEnd(left)    + `: ${clientIp}`);
-    headers.forEach(el => {
-    body.push(el.padEnd(left)             + `: ${request.headers.get(el)}`);
-  });
-  body.push("request-method".padEnd(left) + `: ${request.method}`);
-  body.push("http-host".padEnd(left)      + `: ${getHost(url.host)}`);
-  body.push("script-name".padEnd(left)    + `: ${url.pathname}`);
-  body.push("request-uri".padEnd(left)    + `: ${url.pathname}${url.search}`);
-  body.push("ssl".padEnd(left)            + `: ${url.protocol == 'https:'}`);
-
-  return body.join('\n');
-}
+import {
+  getRemoteAddress, getHost,
+  fullInfo, showAscii, showHelp,
+  hex, dec, bin, ts, dt, p3
+} from "./lib.ts";
 
 const handler: Handler = (request, connInfo) => {
   const url = new URL(request.url);
@@ -56,20 +22,49 @@ const handler: Handler = (request, connInfo) => {
   }
   const serverHost = getHost(url.host);
   const subdomain = serverHost.split('.')[0];
-  console.log(subdomain);
-
   const clientIp = getRemoteAddress(connInfo);
 
   let body = '';
 
   if (url.pathname == '/ip') {
-    body = `${clientIp}\n`;
+    body = clientIp;
   } else if (url.pathname == '/i' || subdomain == 'i') {
     body = fullInfo(clientIp, request, url);
   } else {
-    body = `${clientIp}\n`;
+    if (url.pathname == '/ascii' || url.searchParams.get('ascii') !== null) {
+      body = showAscii();
+    } else if (url.pathname == '/help' || url.searchParams.get('help') !== null) {
+      body = showHelp();
+    } else if (url.searchParams.get('hex') !== null) {
+      body = hex(url.searchParams.get('hex'));
+    } else if (url.pathname.startsWith('/hex/')) {
+      const val = p3(url.pathname);
+      body = (val.length > 0) ? hex(val) : '';
+    } else if (url.searchParams.get('dec') !== null) {
+      body = dec(url.searchParams.get('dec'));
+    } else if (url.pathname.startsWith('/dec/')) {
+      const val = p3(url.pathname);
+      body = (val.length > 0) ? dec(val) : '';
+    } else if (url.searchParams.get('bin') !== null) {
+      body = bin(url.searchParams.get('bin'));
+    } else if (url.pathname.startsWith('/bin/')) {
+      const val = p3(url.pathname);
+      body = (val.length > 0) ? bin(val) : '';
+    } else if (url.searchParams.get('d') !== null) {
+      body = dt(url.searchParams.get('d'));
+    } else if (url.pathname.startsWith('/d/')) {
+      const val = p3(url.pathname);
+      body = (val.length > 0) ? dt(val) : '';
+    } else if (url.searchParams.get('ts') !== null) {
+      body = ts(url.searchParams.get('ts'));
+    } else if (url.pathname.startsWith('/ts/')) {
+      const val = p3(url.pathname);
+      body = (val.length > 0) ? ts(val) : '';
+    } else {
+      body = clientIp;
+    }
   }
-  return new Response(body, {
+  return new Response(`${body}\n`, {
     headers: { "content-type": "text/plain" },
   });
 };
@@ -77,4 +72,3 @@ const handler: Handler = (request, connInfo) => {
 const init: ServeInit = {port: 8000};
 
 serve(handler, init);
-console.log(`Listening on :${init.port}`);
