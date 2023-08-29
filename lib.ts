@@ -77,7 +77,7 @@ export function showAscii() {
   (em)   25 0031 0x19 | 9      57 0071 0x39 | Y      89 0131 0x59 | y     121 0171 0x79
   (sub)  26 0032 0x1a | :      58 0072 0x3a | Z      90 0132 0x5a | z     122 0172 0x7a
   (esc)  27 0033 0x1b | ;      59 0073 0x3b | [      91 0133 0x5b | {     123 0173 0x7b
-  (fs)   28 0034 0x1c | <      60 0074 0x3c | \      92 0134 0x5c | |     124 0174 0x7c
+  (fs)   28 0034 0x1c | <      60 0074 0x3c | \\      92 0134 0x5c | |     124 0174 0x7c
   (gs)   29 0035 0x1d | =      61 0075 0x3d | ]      93 0135 0x5d | }     125 0175 0x7d
   (rs)   30 0036 0x1e | >      62 0076 0x3e | ^      94 0136 0x5e | ~     126 0176 0x7e
   (us)   31 0037 0x1f | ?      63 0077 0x3f | _      95 0137 0x5f | (del) 127 0177 0x7f`;
@@ -88,6 +88,7 @@ export function showHelp() {
   Display the ip address you're connecting from, and other things:
 
   ?help                  - show this help
+  ?auto=                 - try to guess the task
   ?ascii                 - show ascii table
   ?ts=1234               - show ISO 8601 date for unix timestamp 1234
   ?d=2006-05-04T11:12:13 - show unix timestamp for ISO 8601 date, assumes UTC
@@ -96,29 +97,156 @@ export function showHelp() {
   ?bin=1234              - show binary value for 1234`;
 }
 
-export function hex(v: string | null) {
+export function hex(v: string | null) : string {
   const rv = parseInt(`${v}`);
   return rv.toString(16);
 }
 
-export function dec(v: string | null) {
+export function dec(v: string | null) : string {
   const rv = parseInt(`${v}`, 16);
   return `${rv}`;
 }
 
-export function bin(v: string | null) {
+export function bin(v: string | null) : string {
   const rv = parseInt(`${v}`);
   return rv.toString(2);
 }
 
-export function ts(v: string | null) {
+export function ts(v: string | null) : string {
   const rv = parseInt(`${v}`);
   return new Date(rv * 1000).toISOString();
 }
 
-export function dt(v: string | null) {
+export function dt(v: string | null) : string {
   const rv = `${v}`;
   return `${new Date(rv).getTime() / 1000}`;
+}
+
+export function imperialInputToIn(v: string | null) : number {
+  var xv = `${v}`;
+  if (xv.endsWith('in') || xv.endsWith('"')) {
+    xv = xv.replace('in', '');
+    xv = xv.replace('"', '');
+    var num = parseFloat(xv);
+    return num;
+  } else if (xv.endsWith('ft') || xv.endsWith("'")) {
+    xv = xv.replace('ft', '');
+    xv = xv.replace("'", '');
+    var num = parseFloat(xv);
+    return num * 12;
+  } else if (xv.endsWith('mi')) {
+    xv = xv.replace('mi', '');
+    var num = parseFloat(xv);
+    return num * 63360;
+  } else {
+    return 0;
+  }
+}
+
+export function metricInputToMm(v: string | null) : number {
+  var xv = `${v}`;
+  if (xv.endsWith('mm')) {
+    xv = xv.replace('mm', '');
+    var num = parseFloat(xv);
+    return num;
+  } else if (xv.endsWith('cm')) {
+    xv = xv.replace('cm', '');
+    var num = parseFloat(xv);
+    return num * 10;
+  } else if (xv.endsWith('km')) {
+    xv = xv.replace('km', '');
+    var num = parseFloat(xv);
+    return num * 10 * 100 * 1000;
+  } else if (xv.endsWith('m')) {
+    xv = xv.replace('m', '');
+    var num = parseFloat(xv);
+    return num * 10 * 100;
+  } else {
+    return 0;
+  }
+}
+
+export function metricToMile(v: string | null) : string {
+  return `${metricInputToMm(v) / (10 * 100 * 1000 * 1.60934)} mi`;
+}
+
+export function metricToFoot(v: string | null) : string {
+  return `${(metricInputToMm(v) / (10 * 30.48)).toFixed(3)} ft`;
+}
+
+export function metricToInch(v: string | null) : string {
+  return `${(metricInputToMm(v) / (10 * 2.54)).toFixed(3)} in`;
+}
+
+export function imperialToKm(v: string | null) : string {
+  return `${(imperialInputToIn(v) / (10 * 2.54)).toFixed(3)} km`;
+}
+
+export function imperialToM(v: string | null) : string {
+  return `${(imperialInputToIn(v) * 0.0254).toFixed(3)} m`;
+}
+
+export function imperialToCm(v: string | null) : string {
+  return `${(imperialInputToIn(v) * 2.54).toFixed(3)} cm`;
+}
+
+export function imperialToMm(v: string | null) : string {
+  return `${(imperialInputToIn(v) * 25.4).toFixed(3)} mm`;
+}
+
+export function id(v: string) {
+  return v;
+}
+
+export function deduce(v: string | null) : string {
+  if (v == null || v.trim() == '') {
+    return 'Error';
+  }
+
+  type weirdTuple = [fn: (a: string) => string, b: string|null];
+  type weirdMap = {[key:string]: weirdTuple};
+
+  const mst: weirdMap = {
+    'date for '     : [dt, null],
+    'timestamp for' : [ts, null],
+  };
+
+  for (let k of Object.keys(mst)) {
+    if (v.startsWith(k)) {
+      return mst[k][0](v.replace(k, ''));
+    }
+  }
+
+  const mend: weirdMap = {
+    ' in hex'     : [hex, null],
+    ' as hex'     : [hex, null],
+    ' in binary'  : [bin, null],
+    ' as binary'  : [bin, null],
+    ' in decimal' : [dec, null],
+    ' as decimal' : [dec, null],
+
+    ' in miles'   : [metricToMile, 'mi'],
+    ' in mi'      : [metricToMile, 'mi'],
+    ' in feet'    : [metricToFoot, 'ft'],
+    ' in ft'      : [metricToFoot, 'ft'],
+    ' in inch'    : [metricToInch, 'in'],
+    ' in in'      : [metricToInch, 'in'],
+
+    ' in km'      : [imperialToKm, null],
+    ' in cm'      : [imperialToCm, null],
+    ' in mm'      : [imperialToMm, null],
+    ' in m'       : [imperialToM,  null],
+
+    ' as date'     : [ts, null],
+    ' as timestamp': [dt, null],
+  };
+
+  for (let k of Object.keys(mend)) {
+    if (v.endsWith(k)) {
+      return mend[k][0](v.replace(k, ''));
+    }
+  }
+  return 'Error';
 }
 
 export function p3(v: string) {

@@ -21,4 +21,6 @@ REQUEST_URI          : /i
 
 ## Development
 
-~/.deno/bin/deno run --allow-net=:8000 --watch index.ts
+```
+deno run --allow-net=:8000 --watch index.ts
+```

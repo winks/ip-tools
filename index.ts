@@ -7,6 +7,7 @@ import {
 import {
   bin,
   dec,
+  deduce,
   dt,
   EMPTY_GIF,
   fullInfo,
@@ -35,15 +36,15 @@ const handler: Handler = (request, connInfo) => {
 
   if (url.pathname == "/ip") {
     body = clientIp;
-  } else if (url.pathname == "/i" || subdomain == "i") {
+  } else if (url.pathname == "/i") {
     body = fullInfo(clientIp, request, url);
   } else {
     if (url.pathname == "/ascii" || url.searchParams.get("ascii") !== null) {
       body = showAscii();
-    } else if (
-      url.pathname == "/help" || url.searchParams.get("help") !== null
-    ) {
+    } else if (url.pathname == "/help" || url.searchParams.get("help") !== null) {
       body = showHelp();
+    } else if (url.searchParams.get("auto") !== null) {
+      body = deduce(url.searchParams.get("auto"));
     } else if (url.searchParams.get("hex") !== null) {
       body = hex(url.searchParams.get("hex"));
     } else if (url.pathname.startsWith("/hex/")) {
