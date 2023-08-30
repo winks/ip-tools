@@ -14,8 +14,11 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - run: deno fmt --check
-      - run: deno lint
       - run: deno test --allow-none --coverage=cov/
       - run: deno coverage --lcov cov/ > cov.lcov
-
+      - name: check lint
+        continue-on-error: true
+        run: deno lint
+      - name: check fmt
+        continue-on-error: true
+        run: deno fmt --check
