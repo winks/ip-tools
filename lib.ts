@@ -86,60 +86,58 @@ export function showHelp() {
   2000-01-01T00:00:01 as timestamp`;
 }
 
-export function hex(v: string | null) : string {
+export function hex(v: string | null): string {
   const rv = parseInt(`${v}`);
   return rv.toString(16);
 }
 
-export function dec(v: string | null) : string {
+export function dec(v: string | null): string {
   const rv = parseInt(`${v}`, 16);
   return `${rv}`;
 }
 
-export function bin(v: string | null) : string {
+export function bin(v: string | null): string {
   const rv = parseInt(`${v}`);
   return rv.toString(2);
 }
 
-export function ts(v: string | null) : string {
-  if (v == null || v == '') {
-    return 'Error';
+export function ts(v: string | null): string {
+  if (v == null || v == "") {
+    return "Error";
   }
-  if (v == 'now') {
+  if (v == "now") {
     return new Date().toISOString();
   }
   const rv = parseInt(`${v}`);
   if (isNaN(rv)) {
-    return 'NaN';
+    return "NaN";
   }
   return new Date(rv * 1000).toISOString();
 }
 
-export function dt(v: string | null) : string {
+export function dt(v: string | null): string {
   const rv = `${v}`;
-  if (v == null || v == '') {
-    return 'Error';
+  if (v == null || v == "") {
+    return "Error";
   }
-  if (v == 'now') {
+  if (v == "now") {
     return `${Math.floor(Date.now() / 1000)}`;
   }
   return `${Math.floor(new Date(rv).getTime() / 1000)}`;
 }
 
-export function imperialInputToIn(v: string | null) : number {
+export function imperialInputToIn(v: string | null): number {
   var xv = `${v}`;
-  if (xv.endsWith('in') || xv.endsWith('"')) {
-    xv = xv.replace('in', '');
-    xv = xv.replace('"', '');
+  if (xv.endsWith("in") || xv.endsWith('"')) {
+    xv = xv.replace("in", "").replace('"', "");
     var num = parseFloat(xv);
     return num;
-  } else if (xv.endsWith('ft') || xv.endsWith("'")) {
-    xv = xv.replace('ft', '');
-    xv = xv.replace("'", '');
+  } else if (xv.endsWith("ft") || xv.endsWith("'")) {
+    xv = xv.replace("ft", "").replace("'", "");
     var num = parseFloat(xv);
     return num * 12;
-  } else if (xv.endsWith('mi')) {
-    xv = xv.replace('mi', '');
+  } else if (xv.endsWith("mi")) {
+    xv = xv.replace("mi", "");
     var num = parseFloat(xv);
     return num * 63360;
   } else {
@@ -147,22 +145,22 @@ export function imperialInputToIn(v: string | null) : number {
   }
 }
 
-export function metricInputToMm(v: string | null) : number {
+export function metricInputToMm(v: string | null): number {
   var xv = `${v}`;
-  if (xv.endsWith('mm')) {
-    xv = xv.replace('mm', '');
+  if (xv.endsWith("mm")) {
+    xv = xv.replace("mm", "");
     var num = parseFloat(xv);
     return num;
-  } else if (xv.endsWith('cm')) {
-    xv = xv.replace('cm', '');
+  } else if (xv.endsWith("cm")) {
+    xv = xv.replace("cm", "");
     var num = parseFloat(xv);
     return num * 10;
-  } else if (xv.endsWith('km')) {
-    xv = xv.replace('km', '');
+  } else if (xv.endsWith("km")) {
+    xv = xv.replace("km", "");
     var num = parseFloat(xv);
     return num * 10 * 100 * 1000;
-  } else if (xv.endsWith('m')) {
-    xv = xv.replace('m', '');
+  } else if (xv.endsWith("m")) {
+    xv = xv.replace("m", "");
     var num = parseFloat(xv);
     return num * 10 * 100;
   } else {
@@ -170,31 +168,31 @@ export function metricInputToMm(v: string | null) : number {
   }
 }
 
-export function metricToMile(v: string | null) : string {
+export function metricToMile(v: string | null): string {
   return `${metricInputToMm(v) / (10 * 100 * 1000 * 1.60934)} mi`;
 }
 
-export function metricToFoot(v: string | null) : string {
+export function metricToFoot(v: string | null): string {
   return `${(metricInputToMm(v) / (10 * 30.48)).toFixed(3)} ft`;
 }
 
-export function metricToInch(v: string | null) : string {
+export function metricToInch(v: string | null): string {
   return `${(metricInputToMm(v) / (10 * 2.54)).toFixed(3)} in`;
 }
 
-export function imperialToKm(v: string | null) : string {
+export function imperialToKm(v: string | null): string {
   return `${(imperialInputToIn(v) / (10 * 2.54)).toFixed(3)} km`;
 }
 
-export function imperialToM(v: string | null) : string {
+export function imperialToM(v: string | null): string {
   return `${(imperialInputToIn(v) * 0.0254).toFixed(3)} m`;
 }
 
-export function imperialToCm(v: string | null) : string {
+export function imperialToCm(v: string | null): string {
   return `${(imperialInputToIn(v) * 2.54).toFixed(3)} cm`;
 }
 
-export function imperialToMm(v: string | null) : string {
+export function imperialToMm(v: string | null): string {
   return `${(imperialInputToIn(v) * 25.4).toFixed(3)} mm`;
 }
 
@@ -202,12 +200,12 @@ export function id(v: string) {
   return v;
 }
 
-export function deduce(v: string | null) : string {
-  if (v == null || v.trim() == '') {
-    return 'Error';
+export function deduce(v: string | null): string {
+  if (v == null || v.trim() == "") {
+    return "Error";
   }
 
-  type weirdMap = {[key:string]: (a: string|null) => string};
+  type weirdMap = { [key: string]: (a: string | null) => string };
 
   const mst: weirdMap = {
     'date for '     : dt,
@@ -216,7 +214,7 @@ export function deduce(v: string | null) : string {
 
   for (let k of Object.keys(mst)) {
     if (v.startsWith(k)) {
-      return mst[k](v.replace(k, ''));
+      return mst[k](v.replace(k, ""));
     }
   }
 
@@ -246,8 +244,8 @@ export function deduce(v: string | null) : string {
 
   for (let k of Object.keys(mend)) {
     if (v.endsWith(k)) {
-      return mend[k](v.replace(k, ''));
+      return mend[k](v.replace(k, ""));
     }
   }
-  return 'Error';
+  return "Error";
 }

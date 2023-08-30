@@ -64,4 +64,3 @@ export const EMPTY_GIF = new Uint8Array([
   0x00,
   0x3b,
 ]);
-  
