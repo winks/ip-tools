@@ -67,13 +67,23 @@ export function showHelp() {
   Display the ip address you're connecting from, and other things:
 
   ?help                  - show this help
-  ?auto=                 - try to guess the task
   ?ascii                 - show ascii table
+
   ?ts=1234               - show ISO 8601 date for unix timestamp 1234
   ?d=2006-05-04T11:12:13 - show unix timestamp for ISO 8601 date, assumes UTC
   ?hex=1234              - show hexadecimal value for 1234
   ?dec=abcd              - show decimal value for abcd
-  ?bin=1234              - show binary value for 1234`;
+  ?bin=1234              - show binary value for 1234
+
+  ?auto=                 - try to guess the task:
+
+  1234 in hex
+  abcd in decimal
+  23 in binary
+  100km in miles
+  10ft in cm
+  946684801 as date
+  2000-01-01T00:00:01 as timestamp`;
 }
 
 export function hex(v: string | null) : string {
