@@ -127,42 +127,35 @@ export function dt(v: string | null): string {
 }
 
 export function imperialInputToIn(v: string | null): number {
-  var xv = `${v}`;
+  let xv = `${v}`;
   if (xv.endsWith("in") || xv.endsWith('"')) {
     xv = xv.replace("in", "").replace('"', "");
-    var num = parseFloat(xv);
-    return num;
+    return parseFloat(xv);
   } else if (xv.endsWith("ft") || xv.endsWith("'")) {
     xv = xv.replace("ft", "").replace("'", "");
-    var num = parseFloat(xv);
-    return num * 12;
+    return parseFloat(xv) * 12;
   } else if (xv.endsWith("mi")) {
     xv = xv.replace("mi", "");
-    var num = parseFloat(xv);
-    return num * 63360;
+    return parseFloat(xv) * 63360;
   } else {
     return 0;
   }
 }
 
 export function metricInputToMm(v: string | null): number {
-  var xv = `${v}`;
+  let xv = `${v}`;
   if (xv.endsWith("mm")) {
     xv = xv.replace("mm", "");
-    var num = parseFloat(xv);
-    return num;
+    return parseFloat(xv);
   } else if (xv.endsWith("cm")) {
     xv = xv.replace("cm", "");
-    var num = parseFloat(xv);
-    return num * 10;
+    return parseFloat(xv) * 10;
   } else if (xv.endsWith("km")) {
     xv = xv.replace("km", "");
-    var num = parseFloat(xv);
-    return num * 10 * 100 * 1000;
+    return parseFloat(xv) * 10 * 100 * 1000;
   } else if (xv.endsWith("m")) {
     xv = xv.replace("m", "");
-    var num = parseFloat(xv);
-    return num * 10 * 100;
+    return parseFloat(xv) * 10 * 100;
   } else {
     return 0;
   }
@@ -212,7 +205,7 @@ export function deduce(v: string | null): string {
     'timestamp for' : ts,
   };
 
-  for (let k of Object.keys(mst)) {
+  for (const k of Object.keys(mst)) {
     if (v.startsWith(k)) {
       return mst[k](v.replace(k, ""));
     }
@@ -242,7 +235,7 @@ export function deduce(v: string | null): string {
     ' as timestamp': dt,
   };
 
-  for (let k of Object.keys(mend)) {
+  for (const k of Object.keys(mend)) {
     if (v.endsWith(k)) {
       return mend[k](v.replace(k, ""));
     }

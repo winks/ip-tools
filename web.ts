@@ -19,7 +19,7 @@ export function getHost(host: string) {
   } else {
     return host;
   }
-};
+}
 
 export function p3(v: string) {
   const parts = v.split("/");
