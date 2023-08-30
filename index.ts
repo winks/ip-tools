@@ -36,6 +36,7 @@ const handler: Handler = (request, connInfo) => {
   const clientIp = getRemoteAddress(connInfo);
 
   let body = "";
+  const isJson = subdomain == "j" || url.searchParams.get("json") !== null;
 
   if (url.pathname == "/ip") {
     body = clientIp;
@@ -77,9 +78,18 @@ const handler: Handler = (request, connInfo) => {
       body = clientIp;
     }
   }
-  return new Response(`${body}\n`, {
-    headers: { "content-type": "text/plain" },
-  });
+  if (isJson) {
+    const rb = {
+      "data": body,
+    }
+    return new Response(`${JSON.stringify(rb)}\n`, {
+      headers: { "content-type": "application/json" },
+    });
+  } else {
+    return new Response(`${body}\n`, {
+      headers: { "content-type": "text/plain" },
+    });
+  }
 };
 
 const init: ServeInit = { port: 8000 };
