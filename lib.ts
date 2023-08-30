@@ -197,47 +197,46 @@ export function deduce(v: string | null) : string {
     return 'Error';
   }
 
-  type weirdTuple = [fn: (a: string) => string, b: string|null];
-  type weirdMap = {[key:string]: weirdTuple};
+  type weirdMap = {[key:string]: (a: string|null) => string};
 
   const mst: weirdMap = {
-    'date for '     : [dt, null],
-    'timestamp for' : [ts, null],
+    'date for '     : dt,
+    'timestamp for' : ts,
   };
 
   for (let k of Object.keys(mst)) {
     if (v.startsWith(k)) {
-      return mst[k][0](v.replace(k, ''));
+      return mst[k](v.replace(k, ''));
     }
   }
 
   const mend: weirdMap = {
-    ' in hex'     : [hex, null],
-    ' as hex'     : [hex, null],
-    ' in binary'  : [bin, null],
-    ' as binary'  : [bin, null],
-    ' in decimal' : [dec, null],
-    ' as decimal' : [dec, null],
+    ' in hex'     : hex,
+    ' as hex'     : hex,
+    ' in binary'  : bin,
+    ' as binary'  : bin,
+    ' in decimal' : dec,
+    ' as decimal' : dec,
 
-    ' in miles'   : [metricToMile, 'mi'],
-    ' in mi'      : [metricToMile, 'mi'],
-    ' in feet'    : [metricToFoot, 'ft'],
-    ' in ft'      : [metricToFoot, 'ft'],
-    ' in inch'    : [metricToInch, 'in'],
-    ' in in'      : [metricToInch, 'in'],
+    ' in miles'   : metricToMile,
+    ' in mi'      : metricToMile,
+    ' in feet'    : metricToFoot,
+    ' in ft'      : metricToFoot,
+    ' in inch'    : metricToInch,
+    ' in in'      : metricToInch,
 
-    ' in km'      : [imperialToKm, null],
-    ' in cm'      : [imperialToCm, null],
-    ' in mm'      : [imperialToMm, null],
-    ' in m'       : [imperialToM,  null],
+    ' in km'      : imperialToKm,
+    ' in cm'      : imperialToCm,
+    ' in mm'      : imperialToMm,
+    ' in m'       : imperialToM,
 
-    ' as date'     : [ts, null],
-    ' as timestamp': [dt, null],
+    ' as date'     : ts,
+    ' as timestamp': dt,
   };
 
   for (let k of Object.keys(mend)) {
     if (v.endsWith(k)) {
-      return mend[k][0](v.replace(k, ''));
+      return mend[k](v.replace(k, ''));
     }
   }
   return 'Error';
