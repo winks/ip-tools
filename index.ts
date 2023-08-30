@@ -9,16 +9,19 @@ import {
   dec,
   deduce,
   dt,
-  EMPTY_GIF,
   fullInfo,
-  getHost,
-  getRemoteAddress,
   hex,
-  p3,
   showAscii,
   showHelp,
   ts,
 } from "./lib.ts";
+
+import {
+  EMPTY_GIF,
+  getHost,
+  getRemoteAddress,
+  p3
+} from "./web.ts";
 
 const handler: Handler = (request, connInfo) => {
   const url = new URL(request.url);

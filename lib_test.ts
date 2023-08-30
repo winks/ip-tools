@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.142.0/testing/asserts.ts";
 
-import { bin, dec, deduce, dt, getHost, hex, p3, ts } from "./lib.ts";
+import { bin, dec, deduce, dt, hex, ts } from "./lib.ts";
 
 Deno.test("test hex()", () => {
   const rv = hex("123456");
@@ -27,25 +27,6 @@ Deno.test("test dt()", () => {
   assertEquals(rv, "1005568496");
 });
 
-Deno.test("test p3()", () => {
-  const rv = p3("/bin/8");
-  assertEquals(rv, "8");
-});
-
-Deno.test("test getHost()", () => {
-  const rv1 = getHost("foo.example.org");
-  assertEquals(rv1, "foo.example.org");
-
-  const rv2 = getHost("foo.example.org:80");
-  assertEquals(rv2, "foo.example.org");
-
-  const rv3 = getHost("::1");
-  assertEquals(rv3, "::1");
-
-  const rv4 = getHost("2600:1901:0:6d85::");
-  assertEquals(rv4, "2600:1901:0:6d85::");
-});
-
 Deno.test("test deduce() mm 1", () => {
   const rv = deduce("254mm in inch");
   assertEquals(rv, "10.000 in");
@@ -65,7 +46,6 @@ Deno.test("test deduce() bin 1", () => {
   const rv = deduce("9 in binary");
   assertEquals(rv, "1001");
 });
-
 
 Deno.test("test deduce() metric cm", () => {
   const rv = deduce("1in in cm");
