@@ -113,13 +113,28 @@ export function bin(v: string | null) : string {
 }
 
 export function ts(v: string | null) : string {
+  if (v == null || v == '') {
+    return 'Error';
+  }
+  if (v == 'now') {
+    return new Date().toISOString();
+  }
   const rv = parseInt(`${v}`);
+  if (isNaN(rv)) {
+    return 'NaN';
+  }
   return new Date(rv * 1000).toISOString();
 }
 
 export function dt(v: string | null) : string {
   const rv = `${v}`;
-  return `${new Date(rv).getTime() / 1000}`;
+  if (v == null || v == '') {
+    return 'Error';
+  }
+  if (v == 'now') {
+    return `${Math.floor(Date.now() / 1000)}`;
+  }
+  return `${Math.floor(new Date(rv).getTime() / 1000)}`;
 }
 
 export function imperialInputToIn(v: string | null) : number {
