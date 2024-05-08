@@ -1,4 +1,4 @@
-import { type ConnInfo } from "https://deno.land/std@0.142.0/http/server.ts";
+import { type ConnInfo } from "https://deno.land/std@0.224.0/http/server.ts";
 
 // https://stackoverflow.com/questions/71008150/get-remote-client-ip-address-in-deno
 export function assertIsNetAddr(addr: Deno.Addr): asserts addr is Deno.NetAddr {
@@ -26,7 +26,11 @@ export function p3(v: string) {
   if (parts.length < 3) return "";
   return parts[2];
 }
-  
+
+export function output(v: string, isJson: boolean): string {
+  return isJson ? "" : v;
+}
+
 export const EMPTY_GIF = new Uint8Array([
   0x47,
   0x49,

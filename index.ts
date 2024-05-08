@@ -2,7 +2,7 @@ import {
   type Handler,
   serve,
   type ServeInit,
-} from "https://deno.land/std@0.142.0/http/server.ts";
+} from "https://deno.land/std@0.224.0/http/server.ts";
 
 import {
   bin,
@@ -37,10 +37,12 @@ const handler: Handler = (request, connInfo) => {
 
   let body = "";
   const isJson = subdomain == "j" || url.searchParams.get("json") !== null;
+  const isIpOnly = subdomain == "ip";
+  const isFullInfo = subdomain == "i";
 
-  if (url.pathname == "/ip") {
+  if (url.pathname == "/ip" || isIpOnly) {
     body = clientIp;
-  } else if (url.pathname == "/i") {
+  } else if (url.pathname == "/i" || isFullInfo) {
     body = fullInfo(clientIp, request, url);
   } else {
     if (url.pathname == "/ascii" || url.searchParams.get("ascii") !== null) {

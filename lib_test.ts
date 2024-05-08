@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.142.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.224.0/testing/asserts.ts";
 
 import { bin, dec, deduce, dt, hex, ts } from "./lib.ts";
 

@@ -24,3 +24,9 @@ REQUEST_URI          : /i
 ```
 deno run --allow-net=:8000 --watch index.ts
 ```
+
+## Tests
+
+```
+deno test
+```
