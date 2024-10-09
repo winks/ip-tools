@@ -40,47 +40,45 @@ const handler: Handler = (request, connInfo) => {
   const isIpOnly = subdomain == "ip";
   const isFullInfo = subdomain == "i";
 
-  if (url.pathname == "/ip" || isIpOnly) {
+  if (url.pathname == "/ip") {
     body = clientIp;
-  } else if (url.pathname == "/i" || isFullInfo) {
+  } else if (url.pathname == "/i") {
+    body = fullInfo(clientIp, request, url);
+  } else if (url.pathname == "/ascii" || url.searchParams.get("ascii") !== null) {
+    body = showAscii();
+  } else if (url.pathname == "/help" || url.searchParams.get("help") !== null) {
+    body = showHelp();
+  } else if (url.searchParams.get("auto") !== null) {
+    body = deduce(url.searchParams.get("auto"));
+  } else if (url.searchParams.get("hex") !== null) {
+    body = hex(url.searchParams.get("hex"));
+  } else if (url.pathname.startsWith("/hex/")) {
+    const val = p3(url.pathname);
+    body = (val.length > 0) ? hex(val) : "";
+  } else if (url.searchParams.get("dec") !== null) {
+    body = dec(url.searchParams.get("dec"));
+  } else if (url.pathname.startsWith("/dec/")) {
+    const val = p3(url.pathname);
+    body = (val.length > 0) ? dec(val) : "";
+  } else if (url.searchParams.get("bin") !== null) {
+    body = bin(url.searchParams.get("bin"));
+  } else if (url.pathname.startsWith("/bin/")) {
+    const val = p3(url.pathname);
+    body = (val.length > 0) ? bin(val) : "";
+  } else if (url.searchParams.get("d") !== null) {
+    body = dt(url.searchParams.get("d"));
+  } else if (url.pathname.startsWith("/d/")) {
+    const val = p3(url.pathname);
+    body = (val.length > 0) ? dt(val) : "";
+  } else if (url.searchParams.get("ts") !== null) {
+    body = ts(url.searchParams.get("ts"));
+  } else if (url.pathname.startsWith("/ts/")) {
+    const val = p3(url.pathname);
+    body = (val.length > 0) ? ts(val) : "";
+  } else if (isFullInfo) {
     body = fullInfo(clientIp, request, url);
   } else {
-    if (url.pathname == "/ascii" || url.searchParams.get("ascii") !== null) {
-      body = showAscii();
-    } else if (
-      url.pathname == "/help" || url.searchParams.get("help") !== null
-    ) {
-      body = showHelp();
-    } else if (url.searchParams.get("auto") !== null) {
-      body = deduce(url.searchParams.get("auto"));
-    } else if (url.searchParams.get("hex") !== null) {
-      body = hex(url.searchParams.get("hex"));
-    } else if (url.pathname.startsWith("/hex/")) {
-      const val = p3(url.pathname);
-      body = (val.length > 0) ? hex(val) : "";
-    } else if (url.searchParams.get("dec") !== null) {
-      body = dec(url.searchParams.get("dec"));
-    } else if (url.pathname.startsWith("/dec/")) {
-      const val = p3(url.pathname);
-      body = (val.length > 0) ? dec(val) : "";
-    } else if (url.searchParams.get("bin") !== null) {
-      body = bin(url.searchParams.get("bin"));
-    } else if (url.pathname.startsWith("/bin/")) {
-      const val = p3(url.pathname);
-      body = (val.length > 0) ? bin(val) : "";
-    } else if (url.searchParams.get("d") !== null) {
-      body = dt(url.searchParams.get("d"));
-    } else if (url.pathname.startsWith("/d/")) {
-      const val = p3(url.pathname);
-      body = (val.length > 0) ? dt(val) : "";
-    } else if (url.searchParams.get("ts") !== null) {
-      body = ts(url.searchParams.get("ts"));
-    } else if (url.pathname.startsWith("/ts/")) {
-      const val = p3(url.pathname);
-      body = (val.length > 0) ? ts(val) : "";
-    } else {
       body = clientIp;
-    }
   }
   if (isJson) {
     const rb = {

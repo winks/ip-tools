@@ -128,18 +128,29 @@ export function dt(v: string | null): string {
 
 export function imperialInputToIn(v: string | null): number {
   let xv = `${v}`;
+  const rx1 = /([0-9]+)[\']([0-9]+)[\"]/;
+  let r1 = xv.match(rx1);
+  if (r1) {
+    return parseFloat(r1[1]) * 12 + parseFloat(r1[2]);
+  }
+  const rx2 = /([0-9]+)ft([0-9]+)(in)?/;
+  let r2 = xv.match(rx2);
+  if (r2) {
+    return parseFloat(r2[1]) * 12 + parseFloat(r2[2]);
+  }
   if (xv.endsWith("in") || xv.endsWith('"')) {
     xv = xv.replace("in", "").replace('"', "");
     return parseFloat(xv);
-  } else if (xv.endsWith("ft") || xv.endsWith("'")) {
+  }
+  if (xv.endsWith("ft") || xv.endsWith("'")) {
     xv = xv.replace("ft", "").replace("'", "");
     return parseFloat(xv) * 12;
-  } else if (xv.endsWith("mi")) {
+  }
+  if (xv.endsWith("mi")) {
     xv = xv.replace("mi", "");
     return parseFloat(xv) * 63360;
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 export function metricInputToMm(v: string | null): number {
