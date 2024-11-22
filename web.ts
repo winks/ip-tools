@@ -1,4 +1,4 @@
-import { type ConnInfo } from "https://deno.land/std@0.224.0/http/server.ts";
+import { type ConnInfo } from "jsr:@std/http@1.0.11";
 
 // https://stackoverflow.com/questions/71008150/get-remote-client-ip-address-in-deno
 export function assertIsNetAddr(addr: Deno.Addr): asserts addr is Deno.NetAddr {

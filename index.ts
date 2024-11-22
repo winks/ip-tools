@@ -1,8 +1,4 @@
-import {
-  type Handler,
-  serve,
-  type ServeInit,
-} from "https://deno.land/std@0.224.0/http/server.ts";
+import { type Handler, type ServeInit } from "jsr:@std/http@1.0.11";
 
 import {
   bin,
@@ -78,7 +74,7 @@ const handler: Handler = (request, connInfo) => {
   } else if (isFullInfo) {
     body = fullInfo(clientIp, request, url);
   } else {
-      body = clientIp;
+    body = clientIp;
   }
   if (isJson) {
     const rb = {
@@ -96,4 +92,4 @@ const handler: Handler = (request, connInfo) => {
 
 const init: ServeInit = { port: 8000 };
 
-serve(handler, init);
+Deno.serve(handler, init);
