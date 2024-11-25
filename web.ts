@@ -1,13 +1,11 @@
-import { type ConnInfo } from "jsr:@std/http@1.0.11";
 
-// https://stackoverflow.com/questions/71008150/get-remote-client-ip-address-in-deno
 export function assertIsNetAddr(addr: Deno.Addr): asserts addr is Deno.NetAddr {
   if (!["tcp", "udp"].includes(addr.transport)) {
     throw new Error("Not a network address");
   }
 }
 
-export function getRemoteAddress(connInfo: ConnInfo): string {
+export function getRemoteAddress(connInfo: Deno.ServeHandlerInfo): string {
   assertIsNetAddr(connInfo.remoteAddr);
   return connInfo.remoteAddr.hostname;
 }

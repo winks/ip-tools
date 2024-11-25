@@ -1,4 +1,4 @@
-import { type Handler, type ServeInit } from "jsr:@std/http@1.0.11";
+import { type Handler } from "jsr:@std/http@1.0.11";
 
 import {
   bin,
@@ -90,6 +90,6 @@ const handler: Handler = (request, connInfo) => {
   }
 };
 
-const init: ServeInit = { port: 8000 };
+const opts: Deno.ServeTcpOptions = { port: 8000 };
 
-Deno.serve(handler, init);
+Deno.serve(opts, handler);
